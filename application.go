@@ -17,6 +17,18 @@ import (
 	"github.com/jzelinskie/geddit"
 )
 
+type Config struct {
+	RedditOAClient    string
+	RedditOASecret    string
+	RedditOAReturn    string
+	DiscordWebhookURL string
+	IconURL           string
+	Subreddit         string
+	SubredditPretty   string
+}
+type CliArgs struct {
+	ConfigPath string
+}
 type EmbedData struct {
 	Embeds []Embed `json:"embeds"`
 }
