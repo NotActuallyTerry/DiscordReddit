@@ -21,7 +21,8 @@ import (
 type Config struct {
 	RedditOAClient    string
 	RedditOASecret    string
-	RedditOAReturn    string
+	RedditUsername    string
+	RedditPassword    string
 	DiscordWebhookURL string
 	IconURL           string
 	Subreddit         string
@@ -135,23 +136,16 @@ func main() {
 		config.RedditOAClient,
 		config.RedditOASecret,
 		"brdecho v0.02",
-		config.RedditOAReturn,
+		"http://airsi.de",
 	)
 	if err != nil {
 		clog.err(errors.New(fmt.Sprintf("Error in creating Reddit session object: %v", err)))
 	}
 
 	// Create new auth token for confidential clients (personal scripts/apps).
-	url := session.AuthCodeURL("random string", []string{"identity", "read"})
-	fmt.Printf("Visit %s to obtain auth code", url)
-
-	var code string
-	fmt.Scanln(&code)
-
-	// Create and set token using given auth code.
-	err = session.CodeAuth(code)
+	err = session.LoginAuth(config.RedditUsername, config.RedditPassword)
 	if err != nil {
-		log.Fatal(err)
+		clog.err(errors.New(fmt.Sprintf("Error logging in to Reddit: %v", err)))
 	}
 
 	// Get our initial bookmark
