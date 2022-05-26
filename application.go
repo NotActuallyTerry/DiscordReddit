@@ -4,14 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
-	"github.com/joho/godotenv"
-	"github.com/jzelinskie/geddit"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/BurntSushi/toml"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/jzelinskie/geddit"
 )
 
 type EmbedData struct {
