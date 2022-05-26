@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -24,7 +25,6 @@ type Config struct {
 	DiscordWebhookURL string
 	IconURL           string
 	Subreddit         string
-	SubredditPretty   string
 }
 type CliArgs struct {
 	ConfigPath string
@@ -122,6 +122,8 @@ func main() {
 
 	spew.Dump(config)
 
+	sr := strings.ToLower(config.Subreddit)
+
 	// Variables
 	var tickRate time.Duration = 1 * time.Minute
 	var optBefore geddit.ListingOptions
@@ -153,7 +155,7 @@ func main() {
 	}
 
 	// Get our initial bookmark
-	bookmark.getLastID(session, config.Subreddit)
+	bookmark.getLastID(session, sr)
 
 	// Main loop
 	timer := time.Tick(tickRate)
@@ -161,7 +163,7 @@ func main() {
 		clog.debug(fmt.Sprintf("now: %v", now))
 
 		// Get submissions since our bookmark
-		submissions, _ := session.SubredditSubmissions(config.Subreddit, geddit.NewSubmissions, optBefore)
+		submissions, _ := session.SubredditSubmissions(sr, geddit.NewSubmissions, optBefore)
 
 		// If there's no new submissions, move on
 		if len(submissions) < 1 {
@@ -180,7 +182,7 @@ func main() {
 		// Prep a HTTP form data object
 		embeds := EmbedData{Embeds: []Embed{
 			{
-				Title: fmt.Sprintf("New post to r/%v", config.SubredditPretty),
+				Title: fmt.Sprintf("New post to r/%v", config.Subreddit),
 				URL:   submission.FullPermalink(),
 				Color: "16763904",
 				//	Description: s.URL,
@@ -221,7 +223,7 @@ func main() {
 
 		// Look ahead to see if there's more submissions to process
 		optInnerBefore := geddit.ListingOptions{Before: bookmark.LastID}
-		submissions, _ = session.SubredditSubmissions(config.Subreddit, geddit.NewSubmissions, optInnerBefore)
+		submissions, _ = session.SubredditSubmissions(sr, geddit.NewSubmissions, optInnerBefore)
 		if len(submissions) > 0 {
 			clog.warn(fmt.Sprintf("%v submissions left to process", len(submissions)))
 		}
