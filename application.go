@@ -123,6 +123,8 @@ func main() {
 		return
 	}
 
+	spew.Dump(config)
+
 	// Variables
 	var tickRate time.Duration = 1 * time.Minute
 	var optBefore geddit.ListingOptions
