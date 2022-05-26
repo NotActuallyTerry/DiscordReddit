@@ -113,6 +113,15 @@ func (Clog) err(error error) {
 }
 
 func main() {
+	// Parse CLI args
+	args := parseArgs()
+
+	// Load in config
+	config, err := loadConfig(args.ConfigPath)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Failed to load config from "+args.ConfigPath)
+		return
+	}
 
 	// Variables
 	var tickRate time.Duration = 1 * time.Minute
