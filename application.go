@@ -72,11 +72,7 @@ func parseArgs() CliArgs {
 }
 
 func loadConfig(path string) (Config, error) {
-	config := Config{
-		RedditOAReturn: "https://code.tem.party/",
-		IconURL:        "https://i.imgur.com/3NtinwD.png",
-		Subreddit:      "ShitRedditSays",
-	}
+	var config Config
 
 	// Try read in from the given path
 	_, err := toml.DecodeFile(path, &config)
