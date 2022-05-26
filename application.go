@@ -129,26 +129,6 @@ func main() {
 	bookmark := new(Bookmark)
 	clog := new(Clog)
 
-	// Load .env
-	err := godotenv.Load()
-	if err != nil {
-		clog.err(errors.New(fmt.Sprintf("Error loading .env file: %v", err)))
-	}
-
-	redditClient := os.Getenv("REDDIT_CLIENT")
-	redditSecret := os.Getenv("REDDIT_SECRET")
-	redditUsername := os.Getenv("REDDIT_USERNAME")
-	redditPassword := os.Getenv("REDDIT_PASSWORD")
-	discordWebhookClient := os.Getenv("DISCORD_WEBHOOK_CLIENT")
-	discordWebhookSecret := os.Getenv("DISCORD_WEBHOOK_SECRET")
-
-	// Configuration
-	webhookBaseURL := "https://discordapp.com/api/v7/webhooks/"
-	requestUrl := fmt.Sprintf("%v%v/%v", webhookBaseURL, discordWebhookClient, discordWebhookSecret)
-	subreddit := "shitredditsays"
-	subredditPretty := "ShitRedditSays"
-	iconURL := "https://i.imgur.com/3NtinwD.png"
-
 	// New oAuth session for Reddit API
 	session, err := geddit.NewOAuthSession(
 		redditClient,
