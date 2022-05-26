@@ -141,9 +141,16 @@ func main() {
 	}
 
 	// Create new auth token for confidential clients (personal scripts/apps).
-	err = session.LoginAuth(redditUsername, redditPassword)
+	url := session.AuthCodeURL("random string", []string{"identity", "read"})
+	fmt.Printf("Visit %s to obtain auth code", url)
+
+	var code string
+	fmt.Scanln(&code)
+
+	// Create and set token using given auth code.
+	err = session.CodeAuth(code)
 	if err != nil {
-		clog.err(errors.New(fmt.Sprintf("Error logging in to Reddit: %v", err)))
+		log.Fatal(err)
 	}
 
 	// Get our initial bookmark
