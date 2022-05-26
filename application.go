@@ -131,10 +131,10 @@ func main() {
 
 	// New oAuth session for Reddit API
 	session, err := geddit.NewOAuthSession(
-		redditClient,
-		redditSecret,
+		config.RedditOAClient,
+		config.RedditOASecret,
 		"brdecho v0.02",
-		"http://airsi.de",
+		config.RedditOAReturn,
 	)
 	if err != nil {
 		clog.err(errors.New(fmt.Sprintf("Error in creating Reddit session object: %v", err)))
@@ -154,7 +154,7 @@ func main() {
 	}
 
 	// Get our initial bookmark
-	bookmark.getLastID(session, subreddit)
+	bookmark.getLastID(session, config.Subreddit)
 
 	// Main loop
 	timer := time.Tick(tickRate)
@@ -162,7 +162,7 @@ func main() {
 		clog.debug(fmt.Sprintf("now: %v", now))
 
 		// Get submissions since our bookmark
-		submissions, _ := session.SubredditSubmissions(subreddit, geddit.NewSubmissions, optBefore)
+		submissions, _ := session.SubredditSubmissions(config.Subreddit, geddit.NewSubmissions, optBefore)
 
 		// If there's no new submissions, move on
 		if len(submissions) < 1 {
@@ -181,7 +181,7 @@ func main() {
 		// Prep a HTTP form data object
 		embeds := EmbedData{Embeds: []Embed{
 			{
-				Title: fmt.Sprintf("New post to r/%v", subredditPretty),
+				Title: fmt.Sprintf("New post to r/%v", config.SubredditPretty),
 				URL:   submission.FullPermalink(),
 				Color: "16763904",
 				//	Description: s.URL,
@@ -195,7 +195,7 @@ func main() {
 				Author: EmbedAuthor{
 					Name:    submission.Author,
 					URL:     fmt.Sprintf("https://www.reddit.com/user/%s/", submission.Author),
-					IconURL: iconURL,
+					IconURL: config.IconURL,
 				},
 			},
 		}}
@@ -208,7 +208,7 @@ func main() {
 		clog.debug(fmt.Sprintf("json embeds data: %s", jsonEmbeds))
 
 		// POST to Discord
-		response, err := http.Post(requestUrl, "application/json", bytes.NewBuffer(jsonEmbeds))
+		response, err := http.Post(config.DiscordWebhookURL, "application/json", bytes.NewBuffer(jsonEmbeds))
 		if err != nil {
 			clog.err(errors.New(fmt.Sprintf("Error in HTTP POST to Discord: %v", err)))
 		}
@@ -222,7 +222,7 @@ func main() {
 
 		// Look ahead to see if there's more submissions to process
 		optInnerBefore := geddit.ListingOptions{Before: bookmark.LastID}
-		submissions, _ = session.SubredditSubmissions(subreddit, geddit.NewSubmissions, optInnerBefore)
+		submissions, _ = session.SubredditSubmissions(config.Subreddit, geddit.NewSubmissions, optInnerBefore)
 		if len(submissions) > 0 {
 			clog.warn(fmt.Sprintf("%v submissions left to process", len(submissions)))
 		}
