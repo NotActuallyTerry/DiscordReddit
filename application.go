@@ -109,7 +109,7 @@ func (Clog) warn(message string) {
 	fmt.Printf("[WARNING] %v\n", message)
 }
 func (Clog) err(error error) {
-	log.Fatal(fmt.Sprintf("[ERROR] %v\n", error))
+	log.Fatalf("[ERROR] %v\n", error)
 }
 
 func main() {
