@@ -55,6 +55,25 @@ type Bookmark struct {
 	LastID string
 }
 
+func loadConfig(path string) (Config, error) {
+	var config Config
+
+	//config := Config{
+	//	redditOAReturn:  "https://code.tem.party/",
+	//	iconURL:         "https://i.imgur.com/3NtinwD.png",
+	//	subreddit:       "shitredditsays",
+	//	subredditPretty: "ShitRedditSays",
+	//}
+
+	// Try read in from the given path
+	_, err := toml.DecodeFile(path, &config)
+	if err != nil {
+		return config, err
+	}
+
+	return config, nil
+}
+
 func (bookmark *Bookmark) getLastID(session *geddit.OAuthSession, subreddit string) string {
 	optLimit1 := geddit.ListingOptions{Limit: 1}
 	submissions, _ := session.SubredditSubmissions(subreddit, geddit.NewSubmissions, optLimit1)
