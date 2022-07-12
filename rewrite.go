@@ -9,6 +9,7 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -143,11 +144,19 @@ func parseArgs() CliArgs {
 
 	// Set defaults
 	if args.DiscordWebhookURL == "" {
-		log.Fatalf("Webhook not supplied, use --help for info")
+		if os.Getenv("WEBHOOK") == "" {
+			log.Fatalf("Webhook not supplied, use --help for info")
+		} else {
+			args.DiscordWebhookURL = os.Getenv("FOO")
+		}
 	}
 
 	if args.Subreddit == "" {
-		log.Fatalf("Subreddit not supplied, use --help for info")
+		if os.Getenv("SUBREDDIT") == "" {
+			log.Fatalf("Subreddit not supplied, use --help for info")
+		} else {
+			args.Subreddit = os.Getenv("SUBREDDIT")
+		}
 	}
 
 	return args
