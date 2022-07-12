@@ -154,7 +154,7 @@ func parseArgs() CliArgs {
 }
 
 var args = parseArgs()
-var userAgent = "Ububu:grabba-da-cake:0.6.9"
+var userAgent = "linux:reddit-discord-bridge:0.1.0 (by u/SirTerryW)"
 
 func (a *announcer) Post(post *reddit.Post) error {
 	log.Printf("New FullID is: %v, Thumbnail URL is: %s", post.URL, post.Thumbnail)
@@ -185,7 +185,7 @@ func main() {
 	// Get an api handle to reddit for a logged out (script) program,
 	// which forwards this user agent on all requests and issues a request at
 	// most every 5 seconds.
-	apiHandle, err := reddit.NewScript(userAgent, time.Second*10)
+	apiHandle, err := reddit.NewScript(userAgent, time.Second*20)
 
 	if err != nil {
 		log.Fatalf("Failed to create Script: %v", err)
