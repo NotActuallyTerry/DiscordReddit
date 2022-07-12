@@ -22,5 +22,12 @@ jobs:
     - name: Build
       run: go build -v ./...
 
-    - name: Test
-      run: go test -v ./...
+    - name: Get binary name
+      id: bin
+      run: echo "##[set-output name=binfile;]$(find . -maxdepth 1 -type f -executable | cut -c 3-)"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+          name: ${{ steps.bin.outputs.binfile }}
+          path: ${{ steps.bin.outputs.binfile }}
