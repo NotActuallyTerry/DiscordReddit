@@ -5,6 +5,6 @@ COPY . /build/
 
 RUN CGO_ENABLED=0 go build -o /drbot /build/
 
-FROM scratch
+FROM alpine:latest
 COPY --from=build /drbot /drbot
 CMD [ "/drbot" ]
