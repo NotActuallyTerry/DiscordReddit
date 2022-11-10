@@ -147,7 +147,7 @@ func parseArgs() CliArgs {
 		if os.Getenv("WEBHOOK") == "" {
 			log.Fatalf("Webhook not supplied, use --help for info")
 		} else {
-			args.DiscordWebhookURL = os.Getenv("FOO")
+			args.DiscordWebhookURL = os.Getenv("WEBHOOK")
 		}
 	}
 
