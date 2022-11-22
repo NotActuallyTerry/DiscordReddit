@@ -104,7 +104,7 @@ func populateWebhook(post *reddit.Post) WebhookData {
 		WebhookContents = WebhookData{Embeds: []Embed{
 			{
 				Title:       post.Title,
-				URL:         post.URL,
+				URL:         fmt.Sprintf("https://reddit.com%s", post.Permalink),
 				Color:       "16729344",
 				Description: post.SelfText,
 				Timestamp:   time.Unix(int64(post.CreatedUTC), 0).Format(time.RFC3339),
@@ -117,10 +117,11 @@ func populateWebhook(post *reddit.Post) WebhookData {
 	} else {
 		WebhookContents = WebhookData{Embeds: []Embed{
 			{
-				Title:     post.Title,
-				URL:       post.URL,
-				Color:     "16729344",
-				Timestamp: time.Unix(int64(post.CreatedUTC), 0).Format(time.RFC3339),
+				Title:       post.Title,
+				URL:         fmt.Sprintf("https://reddit.com%s", post.Permalink),
+				Color:       "16729344",
+				Description: fmt.Sprintf("[Link to full image](%s)", post.URL),
+				Timestamp:   time.Unix(int64(post.CreatedUTC), 0).Format(time.RFC3339),
 				Author: EmbedAuthor{
 					Name:   post.Author,
 					URL:    fmt.Sprintf("https://reddit.com/user/%s/", post.Author),
